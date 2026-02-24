@@ -176,7 +176,14 @@ async function fetchMeme() {
     attempts++;
     try {
       const src = SUBREDDITS[Math.floor(Math.random() * SUBREDDITS.length)];
-      const res = await fetch(`https://www.reddit.com/r/${src}.json`);
+      // raw_json=1 bypasses Reddit's mobile User-Agent detection — without it,
+      // Chrome on Android receives an HTML redirect instead of JSON, causing
+      // res.json() to throw and silently exhaust all retry attempts.
+      // Accept header reinforces to Reddit's CDN that this is a programmatic
+      // API call, not browser navigation, preventing the mobile web redirect.
+      const res = await fetch(`https://www.reddit.com/r/${src}.json?raw_json=1&limit=100`, {
+        headers: { Accept: 'application/json' },
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const dat = await res.json();
 
