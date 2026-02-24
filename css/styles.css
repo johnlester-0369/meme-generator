@@ -1,0 +1,422 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Design tokens — all color, shadow, and radius values live here so the visual
+   system can be updated from a single location without hunting through components
+   ───────────────────────────────────────────────────────────────────────────── */
+:root {
+  --color-primary: 68 114 210;
+  --color-on-primary: 255 255 255;
+  --color-primary-container: 221 232 254;
+  --color-on-primary-container: 26 48 95;
+  --color-secondary: 126 93 209;
+  --color-on-secondary: 255 255 255;
+  --color-secondary-container: 232 228 254;
+  --color-on-secondary-container: 54 38 94;
+  --color-surface: 255 255 255;
+  --color-on-surface: 15 15 15;
+  --color-on-surface-variant: 50 65 87;
+  --color-surface-container-low: 248 250 252;
+  --color-surface-container: 241 245 249;
+  --color-surface-container-high: 227 233 241;
+  --color-inverse-surface: 29 41 58;
+  --color-inverse-on-surface: 248 250 252;
+  --color-outline-variant: 144 161 185;
+  --color-scrim: 0 0 0;
+  --color-shadow: 0 0 0;
+  --color-error: 231 0 11;
+  --color-success: 0 130 54;
+  --color-success-container: 220 252 231;
+  --color-gradient-primary: linear-gradient(135deg, rgb(53, 109, 232) 0%, rgb(23, 129, 175) 100%);
+  --color-gradient-secondary: linear-gradient(135deg, rgb(128, 87, 221) 0%, rgb(55, 109, 232) 100%);
+
+  --shadow-sm: 0 1px 3px rgb(var(--color-shadow) / 0.08), 0 1px 2px rgb(var(--color-shadow) / 0.06);
+  --shadow-md: 0 4px 16px rgb(var(--color-shadow) / 0.10), 0 2px 6px rgb(var(--color-shadow) / 0.06);
+  --shadow-lg: 0 8px 32px rgb(var(--color-shadow) / 0.12), 0 4px 12px rgb(var(--color-shadow) / 0.08);
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: rgb(var(--color-surface-container-low));
+  color: rgb(var(--color-on-surface));
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgb(var(--color-primary-container) / 0.5) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgb(var(--color-secondary-container) / 0.4) 0%, transparent 50%);
+}
+
+/* ── Header ── */
+.app-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+  background: rgb(var(--color-surface) / 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgb(var(--color-outline-variant) / 0.5);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-logo { display: flex; align-items: center; gap: 10px; }
+.app-logo-icon {
+  width: 36px; height: 36px;
+  background: var(--color-gradient-secondary);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  color: rgb(var(--color-on-secondary));
+}
+.app-logo-icon svg { width: 20px; height: 20px; }
+.app-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.25rem; font-weight: 800;
+  background: var(--color-gradient-secondary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Icon button ── */
+.icon-btn {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-sm);
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, transform 0.1s;
+  background: transparent;
+  color: rgb(var(--color-on-surface-variant));
+  text-decoration: none;
+}
+.icon-btn:hover { background: rgb(var(--color-surface-container-high)); color: rgb(var(--color-on-surface)); }
+.icon-btn:active { transform: scale(0.94); }
+.icon-btn svg { width: 20px; height: 20px; }
+
+/* ── Layout ── */
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 48px;
+  gap: 20px;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* ── Meme card ── */
+.meme-card {
+  width: 100%;
+  background: rgb(var(--color-surface));
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.meme-card:hover { box-shadow: var(--shadow-lg); }
+
+/* Fixed aspect ratio prevents layout jump between meme loads */
+.meme-image-wrap {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  position: relative;
+  overflow: hidden;
+  background: rgb(var(--color-surface-container));
+  cursor: zoom-in;
+}
+.meme-image-wrap img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  display: block;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.meme-image-wrap:hover img { transform: scale(1.02); }
+
+.state-overlay {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px;
+  color: rgb(var(--color-on-surface-variant));
+}
+.state-overlay svg { width: 48px; height: 48px; opacity: 0.5; }
+.state-overlay p { font-size: 0.9rem; font-weight: 500; }
+
+.spinner {
+  width: 48px; height: 48px;
+  border: 3px solid rgb(var(--color-primary-container));
+  border-top-color: rgb(var(--color-primary));
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.state-overlay.error svg { opacity: 1; color: rgb(var(--color-error)); }
+.state-overlay.error p  { color: rgb(var(--color-error)); }
+
+/* ── Card body ── */
+.meme-card-body { padding: 20px 24px 16px; }
+
+.meme-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+/* Subreddit pill */
+.meme-subreddit {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  color: rgb(var(--color-secondary));
+  background: rgb(var(--color-secondary-container));
+  padding: 3px 10px; border-radius: 100px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.meme-subreddit:hover { opacity: 0.8; }
+.meme-subreddit svg { width: 11px; height: 11px; }
+
+/* Flair pill — color set inline via JS from link_flair_background_color */
+.meme-flair {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 3px 8px; border-radius: 100px;
+  background: rgb(var(--color-surface-container-high));
+  color: rgb(var(--color-on-surface-variant));
+}
+
+.meme-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.05rem; font-weight: 700; line-height: 1.4;
+  color: rgb(var(--color-on-surface));
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Stats row: upvotes · comments · author */
+.meme-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.8rem;
+  color: rgb(var(--color-on-surface-variant));
+}
+.meme-stat {
+  display: flex; align-items: center; gap: 5px;
+  font-weight: 500;
+}
+.meme-stat svg { width: 14px; height: 14px; }
+
+/* Upvote ratio bar — subtle fill under the card stat row */
+.ratio-bar {
+  height: 2px;
+  background: rgb(var(--color-surface-container-high));
+  border-radius: 100px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+.ratio-fill {
+  height: 100%;
+  background: var(--color-gradient-primary);
+  border-radius: 100px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Card actions ── */
+.meme-card-actions {
+  display: flex; align-items: center; gap: 4px;
+  padding: 8px 16px 14px;
+}
+.meme-card-actions .icon-btn { width: 36px; height: 36px; border-radius: var(--radius-sm); }
+.meme-card-actions .spacer { flex: 1; }
+
+/* Reddit link button — slightly different style to stand out as navigation */
+.btn-reddit {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem; font-weight: 600;
+  color: rgb(var(--color-on-surface-variant));
+  background: rgb(var(--color-surface-container));
+  border: none; border-radius: var(--radius-sm);
+  padding: 6px 12px; cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.btn-reddit:hover {
+  background: rgb(var(--color-surface-container-high));
+  color: rgb(var(--color-on-surface));
+}
+.btn-reddit svg { width: 14px; height: 14px; }
+
+/* ── Generate button ── */
+.btn-generate {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 16px 24px;
+  border: none; border-radius: var(--radius-lg); cursor: pointer;
+  font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 600;
+  color: rgb(var(--color-on-primary));
+  background: var(--color-gradient-primary);
+  box-shadow: 0 4px 16px rgb(var(--color-primary) / 0.35);
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  letter-spacing: 0.02em;
+}
+.btn-generate:hover:not(:disabled) {
+  opacity: 0.92;
+  box-shadow: 0 6px 20px rgb(var(--color-primary) / 0.45);
+  transform: translateY(-1px);
+}
+.btn-generate:active:not(:disabled) { transform: translateY(0) scale(0.98); }
+.btn-generate:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-generate svg { width: 20px; height: 20px; transition: transform 0.5s; }
+.btn-generate.loading svg { animation: spin 1s linear infinite; }
+
+/* ── Lightbox — full-screen image view on click ── */
+.lightbox {
+  position: fixed; inset: 0;
+  background: rgb(var(--color-scrim) / 0.92);
+  z-index: 400;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+  cursor: zoom-out;
+}
+.lightbox.open { opacity: 1; pointer-events: auto; }
+.lightbox img {
+  max-width: 95vw; max-height: 92vh;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  transform: scale(0.95);
+  transition: transform 0.2s;
+}
+.lightbox.open img { transform: scale(1); }
+.lightbox-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 40px; height: 40px;
+  border: none; border-radius: 50%; cursor: pointer;
+  background: rgb(255 255 255 / 0.15);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.lightbox-close:hover { background: rgb(255 255 255 / 0.25); }
+.lightbox-close svg { width: 20px; height: 20px; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: rgb(var(--color-inverse-surface));
+  color: rgb(var(--color-inverse-on-surface));
+  padding: 12px 20px; border-radius: 100px;
+  font-size: 0.875rem; font-weight: 500;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+  opacity: 0; z-index: 300; white-space: nowrap;
+}
+.toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast svg { width: 16px; height: 16px; color: rgb(var(--color-success-container)); }
+
+/* ── Empty state ── */
+.empty-state {
+  width: 100%;
+  background: rgb(var(--color-surface));
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  padding: 48px 24px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 12px;
+  text-align: center;
+  color: rgb(var(--color-on-surface-variant));
+}
+.empty-state-icon {
+  width: 64px; height: 64px;
+  background: rgb(var(--color-primary-container));
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  color: rgb(var(--color-on-primary-container));
+  margin-bottom: 4px;
+}
+.empty-state-icon svg { width: 32px; height: 32px; }
+.empty-state h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.2rem; font-weight: 700;
+  color: rgb(var(--color-on-surface));
+}
+.empty-state p { font-size: 0.875rem; max-width: 280px; line-height: 1.5; }
+
+/* ── Hero section ── */
+.app-hero {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px 16px 8px;
+  text-align: center;
+}
+.app-hero-heading {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+  background: var(--color-gradient-secondary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 14px;
+}
+.app-hero-sub {
+  font-size: 0.95rem;
+  color: rgb(var(--color-on-surface-variant));
+  max-width: 420px;
+  margin: 0 auto 20px;
+  line-height: 1.65;
+}
+.app-hero-badges {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.app-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: rgb(var(--color-on-surface-variant));
+  background: rgb(var(--color-surface));
+  border: 1px solid rgb(var(--color-outline-variant) / 0.6);
+  border-radius: 100px;
+  padding: 4px 12px;
+  box-shadow: var(--shadow-sm);
+}
+.app-hero-badge svg { width: 12px; height: 12px; }
+
+/* ── Responsive overrides ── */
+@media (max-width: 480px) {
+  .app-hero { padding: 28px 12px 4px; }
+  .app-hero-heading { font-size: 2rem; }
+  .app-main { padding: 20px 12px 40px; }
+  .meme-card-body { padding: 16px 16px 12px; }
+  .meme-stats { gap: 10px; font-size: 0.75rem; }
+}
