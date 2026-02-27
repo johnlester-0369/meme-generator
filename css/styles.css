@@ -10,7 +10,6 @@
   --color-secondary: 126 93 209;
   --color-on-secondary: 255 255 255;
   --color-secondary-container: 232 228 254;
-  --color-on-secondary-container: 54 38 94;
   --color-surface: 255 255 255;
   --color-on-surface: 15 15 15;
   --color-on-surface-variant: 50 65 87;
@@ -23,7 +22,6 @@
   --color-scrim: 0 0 0;
   --color-shadow: 0 0 0;
   --color-error: 231 0 11;
-  --color-success: 0 130 54;
   --color-success-container: 220 252 231;
   --color-gradient-primary: linear-gradient(135deg, rgb(53, 109, 232) 0%, rgb(23, 129, 175) 100%);
   --color-gradient-secondary: linear-gradient(135deg, rgb(128, 87, 221) 0%, rgb(55, 109, 232) 100%);
