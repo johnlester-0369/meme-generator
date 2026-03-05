@@ -47,6 +47,29 @@ Each layer is isolated so it can be read and edited independently — a designer
 
 ---
 
+## Architecture
+
+```
+          ┌────────────┐
+          │   Browser  │
+          └──────┬─────┘
+                 │
+                 ▼
+   ┌─────────────────────────────────┐
+   │            MemeSnap             │
+   │                                 │
+   │  index.html     styles.css      │
+   │  js/app.js   (state · render)   │
+   └──────────────────┬──────────────┘
+                      │ GET /r/{sub}.json
+                      ▼
+   ┌─────────────────────────────────┐
+   │        Reddit JSON API          │
+   └─────────────────────────────────┘
+```
+
+---
+
 ## How It Works
 
 1. **Subreddit selection** — a subreddit is chosen at random from the curated list
